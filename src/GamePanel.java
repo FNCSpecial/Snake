@@ -3,12 +3,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
+
 public class GamePanel extends JPanel implements ActionListener {
 static final int SCREEN_WIDTH = 1080;
 static final int SCREEN_HEIGHT = 720;
 static final int UNIT_SIZE = 20;
 static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / (UNIT_SIZE*UNIT_SIZE);
-static final int DELAY = 60;
+static final int DELAY = 100;
 
 final int[] x = new int[GAME_UNITS];
 final int[] y = new int[GAME_UNITS];
@@ -158,29 +159,31 @@ if( x[0] == appleX && y[0] == appleY){
 
     }
   public class MyKeyAdapter extends KeyAdapter{
+
       @Override
       public void keyPressed(KeyEvent e) {
           switch (e.getKeyCode()) {
-              case KeyEvent.VK_LEFT -> {
+              case KeyEvent.VK_LEFT, KeyEvent.VK_A -> {
                   if (direction != 'R') {
                       direction = 'L';
                   }
               }
-              case KeyEvent.VK_RIGHT -> {
+              case KeyEvent.VK_RIGHT,KeyEvent.VK_D -> {
                   if (direction != 'L') {
                       direction = 'R';
                   }
               }
-              case KeyEvent.VK_UP -> {
+              case KeyEvent.VK_UP,KeyEvent.VK_W  -> {
                   if (direction != 'D') {
                       direction = 'U';
                   }
               }
-              case KeyEvent.VK_DOWN -> {
+              case KeyEvent.VK_DOWN,KeyEvent.VK_S -> {
                   if (direction != 'U') {
                       direction = 'D';
                   }
               }
+
           }
       }
 
