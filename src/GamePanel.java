@@ -2,6 +2,7 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -33,6 +34,12 @@ boolean menu = false;
 Timer timer;
 Random random;
 
+private BufferedImage img;
+
+//Object
+Texture tex;
+
+
 
 
 //panel creation
@@ -40,9 +47,14 @@ GamePanel() {
     random = new Random();
     this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
     this.setBackground(Color.darkGray);
+
+    BufferedImageLoader loader = new BufferedImageLoader();
+    img = loader.loadImage("/Snake.png");
     this.setFocusable(true);
     this.addKeyListener(new MyKeyAdapter());
     this.addMouseListener(new MyMouseListener());
+    tex = new Texture();
+
     startGame();
 }
 
@@ -58,6 +70,7 @@ draw(g);
  }
  //menu draw, game draw and end screen draw
  public void draw(Graphics g) {
+    boolean drown = false;
         if(menu){
             gameMenu(g);
         }
@@ -69,21 +82,36 @@ draw(g);
          }
 
          g.setColor(Color.green);
-         g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
+         g.drawImage(tex.apple[0],appleX, appleY,null);
+        // g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
 
          for (int i = 0; i < bodyParts; i++) {
              if (i == 0) {
-                 g.setColor(Color.BLUE);
-                 g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
-             } else {
-                 g.setColor(Color.WHITE);
-                 g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                 if (direction == 'L') {
+                     g.drawImage(tex.player[0], x[0], y[0], null);
+                 }
+                 if (direction == 'R') {
+                     g.drawImage(tex.player[1], x[0], y[0], null);
+                 }
+                 if (direction == 'U') {
+                     g.drawImage(tex.player[2], x[0], y[0], null);
+                 }
+                 if (direction == 'D') {
+                     g.drawImage(tex.player[3], x[0], y[0], null);
+                 }
              }
-         }
+             else {
+                   g.setColor(Color.GREEN);
+                   g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
+                 }
+             }
+
+
          g.setColor(Color.red);
          g.setFont(new Font("Ink Free",Font.BOLD,40));
          FontMetrics metrics = getFontMetrics(g.getFont());
          g.drawString("Score:"+applesEaten,(SCREEN_WIDTH - metrics.stringWidth("Score:"+applesEaten)), g.getFont().getSize());
+
      }
      else {
          gameOver(g);
@@ -113,8 +141,6 @@ draw(g);
  public void checkApple() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
 if( x[0] == appleX && y[0] == appleY){
     playSound("src/apple.wav");
-
-
     bodyParts++;
     applesEaten++;
     newApple();
